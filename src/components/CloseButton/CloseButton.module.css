@@ -1,15 +1,18 @@
 .CloseButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   top: 10px;
   right: 10px;
 
-  padding: 5px 10px;
+  width: 30px;
+  height: 30px;
 
   border-radius: 50%;
   border-style: none;
 }
 
 .CloseButton:hover {
-  color: #ffffff;
-  background-color: #c5cae9;
+  color: #ef9a9a;
 }
