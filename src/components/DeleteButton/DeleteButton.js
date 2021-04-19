@@ -1,4 +1,8 @@
+// React imports
 import React from 'react';
+// Icons imports
+import { MdRemoveCircleOutline } from 'react-icons/md';
+// Styles imports
 import styles from './DeleteButton.module.css';
 
 const DeleteButton = ({ id, onDelete }) => {
@@ -8,7 +12,7 @@ const DeleteButton = ({ id, onDelete }) => {
       onClick={() => onDelete(id)}
       className={styles.DeleteButton}
     >
-      Delete
+      <MdRemoveCircleOutline className={styles.deleteIcon} />
     </button>
   );
 };

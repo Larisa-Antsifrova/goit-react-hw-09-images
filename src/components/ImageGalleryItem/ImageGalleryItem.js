@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import DeleteButton from '../DeleteButton/DeleteButton';
+import DeleteButton from '../DeleteButton';
 
 import styles from './ImageGalleryItem.module.css';
 

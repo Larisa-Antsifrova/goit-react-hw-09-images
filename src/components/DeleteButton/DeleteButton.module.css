@@ -2,4 +2,21 @@
   position: absolute;
   top: 5px;
   right: 5px;
+
+  padding: 5px;
+
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+
+.deleteIcon {
+  width: 30px;
+  height: 30px;
+
+  color: #ef9a9a;
+}
+
+.deleteIcon:hover {
+  color: #b71c1c;
 }
