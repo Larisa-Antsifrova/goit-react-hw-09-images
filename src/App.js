@@ -70,8 +70,8 @@ class App extends Component {
       .finally(() => this.setState({ isLoading: false }));
   };
 
-  setLargeImg = image => {
-    this.setState({ selectedImg: image.largeImageURL });
+  setLargeImg = largeImageURL => {
+    this.setState({ selectedImg: largeImageURL });
     this.toggleModal();
   };
 

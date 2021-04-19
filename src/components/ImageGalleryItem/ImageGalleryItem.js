@@ -1,54 +1,51 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// React imports
+import React, { useState } from 'react';
+// Components imports
 import DeleteButton from '../DeleteButton';
-
+// Helpers imports
+import PropTypes from 'prop-types';
+// Styles imports
 import styles from './ImageGalleryItem.module.css';
 
-class ImageGalleryItem extends Component {
-  state = {
-    showDeleteButton: false,
+export default function ImageGalleryItem({
+  image: { webformatURL, largeImageURL, tags, id },
+  setLargeImg,
+  deleteImage,
+}) {
+  const [showDeleteButton, setShowDeleteButton] = useState();
+
+  const toggleButton = () => {
+    setShowDeleteButton(!showDeleteButton);
   };
 
-  toggleButton = () => {
-    this.setState({
-      showDeleteButton: !this.state.showDeleteButton,
-    });
-  };
-  showButton = () => {
-    this.setState({ showDeleteButton: true });
+  const showButton = () => {
+    setShowDeleteButton(true);
   };
 
-  render() {
-    const { image, setLargeImg, deleteImage } = this.props;
-    const { webformatURL, tags, id } = image;
-
-    return (
-      <li
-        className={styles.ImageGalleryItem}
-        onMouseEnter={this.toggleButton}
-        onMouseLeave={this.toggleButton}
-        onMouseOver={this.showButton}
-      >
-        <img
-          onClick={() => setLargeImg(image)}
-          src={webformatURL}
-          alt={tags}
-          className={styles['ImageGalleryItem-image']}
-        />
-        {this.state.showDeleteButton && (
-          <DeleteButton id={id} onDelete={deleteImage} />
-        )}
-      </li>
-    );
-  }
+  return (
+    <li
+      className={styles.ImageGalleryItem}
+      onMouseEnter={toggleButton}
+      onMouseLeave={toggleButton}
+      onMouseOver={showButton}
+    >
+      <img
+        onClick={() => setLargeImg(largeImageURL)}
+        src={webformatURL}
+        alt={tags}
+        className={styles['ImageGalleryItem-image']}
+      />
+      {showDeleteButton && <DeleteButton id={id} onDelete={deleteImage} />}
+    </li>
+  );
 }
 
 ImageGalleryItem.propTypes = {
   image: PropTypes.shape({
+    id: PropTypes.number.isRequired,
     webformatURL: PropTypes.string.isRequired,
+    largeImageURL: PropTypes.string.isRequired,
     tags: PropTypes.string.isRequired,
   }).isRequired,
   setLargeImg: PropTypes.func.isRequired,
 };
-
-export default ImageGalleryItem;
