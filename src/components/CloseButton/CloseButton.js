@@ -1,4 +1,6 @@
+// React imports
 import React from 'react';
+// Styles imports
 import styles from './CloseButton.module.css';
 
 const CloseButton = ({ onClose }) => {

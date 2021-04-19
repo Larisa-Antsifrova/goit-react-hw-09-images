@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
-import CloseButton from '../CloseButton/CloseButton';
+import CloseButton from '../CloseButton';
 
 import styles from './Modal.module.css';
 
