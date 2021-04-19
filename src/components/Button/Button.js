@@ -1,18 +1,25 @@
+// React imports
 import React from 'react';
+// Helpers imports
 import PropTypes from 'prop-types';
-
+// Styles imports
 import styles from './Button.module.css';
 
-const Button = ({ onLoadMore }) => {
+const Button = ({ onClick, label }) => {
   return (
-    <button type="button" className={styles.Button} onClick={onLoadMore}>
-      Load more
+    <button type="button" className={styles.Button} onClick={onClick}>
+      {label}
     </button>
   );
 };
 
+Button.defaultProps = {
+  label: 'Button',
+};
+
 Button.propTypes = {
-  onLoadMore: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
+  label: PropTypes.string,
 };
 
 export default Button;

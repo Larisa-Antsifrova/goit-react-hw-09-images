@@ -118,7 +118,7 @@ class App extends Component {
           )}
         </Container>
         {!_.isEmpty(images) && !isLoading && (
-          <Button onLoadMore={this.getImages} />
+          <Button onClick={this.getImages} label="Load more" />
         )}
         {showModal && (
           <Modal largeImgUrl={selectedImg} onClose={this.toggleModal} />
