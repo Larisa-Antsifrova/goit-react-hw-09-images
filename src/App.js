@@ -65,7 +65,7 @@ export default function App() {
   };
 
   const deleteImage = imageId => {
-    setImages(prevState => prevState.filter(image => image.id !== imageId));
+    setImages(prevImages => prevImages.filter(image => image.id !== imageId));
   };
 
   return (
