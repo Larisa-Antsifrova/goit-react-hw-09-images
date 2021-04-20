@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-// Importing components
+// React imports
+import React, { useState, useEffect } from 'react';
+// Components imports
 import Container from './components/Container';
 import Searchbar from './components/Searchbar';
 import ImageGallery from './components/ImageGallery';
@@ -9,123 +10,93 @@ import Modal from './components/Modal';
 import Error from './components/Error';
 // Importing function to fetch images from API
 import { fetchImages } from './services/pixabayApi';
-// Loader from https://github.com/mhnpd/react-loader-spinner and its styles
+// Loader imports
 import Loader from 'react-loader-spinner';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
+// Libs imports
 import _ from 'lodash';
-class App extends Component {
-  state = {
-    images: [],
-    query: '',
-    page: 1,
-    isLoading: false,
-    error: null,
-    selectedImg: '',
-    showModal: false,
-  };
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.query !== this.state.query) {
-      this.getImages();
-    }
-  }
+export default function App() {
+  const [images, setImages] = useState([]);
+  const [query, setQuery] = useState('');
+  const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [selectedImage, setSelectedImage] = useState('');
+  const [showModal, setShowModal] = useState(false);
 
-  handleSubmit = newQuery => {
-    this.setState({
-      images: [],
-      query: newQuery,
-      page: 1,
-      error: null,
-      selectedImg: '',
-      showModal: false,
-    });
-  };
+  useEffect(() => {
+    if (!query) return;
 
-  getImages = () => {
-    const { query, page } = this.state;
+    setIsLoading(true);
 
-    const options = {
+    fetchImages({
       query,
       page,
-    };
-
-    this.setState({ isLoading: true });
-
-    fetchImages(options)
+    })
       .then(images => {
-        this.setState(prevState => ({
-          images: [...prevState.images, ...images],
-          page: prevState.page + 1,
-        }));
-
-        // Taken from Homework task for smooth scroll
-        window.scrollTo({
-          top: document.documentElement.scrollHeight,
-          behavior: 'smooth',
-        });
+        setImages(prevImages => [...prevImages, ...images]);
       })
       .catch(error => {
-        this.setState({ error });
+        setError(error);
       })
-      .finally(() => this.setState({ isLoading: false }));
+      .finally(() => setIsLoading(false));
+  }, [page, query]);
+
+  const handleSubmit = newQuery => {
+    setImages([]);
+    setQuery(newQuery);
+    setPage(1);
+    setIsLoading(false);
+    setError(null);
+    setSelectedImage('');
+    setShowModal(false);
   };
 
-  setLargeImg = largeImageURL => {
-    this.setState({ selectedImg: largeImageURL });
-    this.toggleModal();
+  const setLargeImg = largeImageURL => {
+    setSelectedImage(largeImageURL);
+    toggleModal();
   };
 
-  toggleModal = () => {
-    this.setState(({ showModal }) => ({
-      showModal: !showModal,
-    }));
+  const increasePage = () => setPage(prevPage => prevPage + 1);
+
+  const toggleModal = () => {
+    setShowModal(!showModal);
   };
 
-  deleteImage = imageId => {
-    this.setState(prevState => {
-      return {
-        images: prevState.images.filter(image => image.id !== imageId),
-      };
-    });
+  const deleteImage = imageId => {
+    setImages(prevState => prevState.filter(image => image.id !== imageId));
   };
 
-  render() {
-    const { images, error, isLoading, showModal, selectedImg } = this.state;
-
-    return (
-      <div className="App">
-        <Searchbar onSubmit={this.handleSubmit} />
-        <Container>
-          <ImageGallery>
-            {images.map(image => (
-              <ImageGalleryItem
-                key={image.id}
-                image={image}
-                setLargeImg={this.setLargeImg}
-                deleteImage={this.deleteImage}
-              />
-            ))}
-          </ImageGallery>
-          {error && <Error message={error.message} />}
-          {isLoading && (
-            <Loader
-              type="TailSpin"
-              color="#00BFFF"
-              height={80}
-              width={80}
-              className="loader"
+  return (
+    <div className="App">
+      <Searchbar onSubmit={handleSubmit} />
+      <Container>
+        <ImageGallery>
+          {images.map(image => (
+            <ImageGalleryItem
+              key={image.id}
+              image={image}
+              setLargeImg={setLargeImg}
+              deleteImage={deleteImage}
             />
-          )}
-        </Container>
-        {!_.isEmpty(images) && !isLoading && (
-          <Button onClick={this.getImages} label="Load more" />
+          ))}
+        </ImageGallery>
+        {error && <Error message={error.message} />}
+        {isLoading && (
+          <Loader
+            type="TailSpin"
+            color="#00BFFF"
+            height={80}
+            width={80}
+            className="loader"
+          />
         )}
-        {showModal && (
-          <Modal largeImgUrl={selectedImg} onClose={this.toggleModal} />
-        )}
-      </div>
-    );
-  }
+      </Container>
+      {!_.isEmpty(images) && !isLoading && (
+        <Button onClick={increasePage} label="Load more" />
+      )}
+      {showModal && <Modal largeImgUrl={selectedImage} onClose={toggleModal} />}
+    </div>
+  );
 }
-
-export default App;
